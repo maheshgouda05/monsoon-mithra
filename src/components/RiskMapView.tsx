@@ -109,7 +109,7 @@ export const RiskMapView: React.FC<RiskMapViewProps> = ({
     `);
     userMarkerRef.current = userMarker;
 
-    // 2. Add Karnataka SIH Pilot Agro-Stations
+    // 2. Add Regional Pilot Agro-Stations
     PILOT_LOCATIONS.forEach((pilot) => {
       const isCurrentPilot =
         Math.abs(pilot.latitude - location.latitude) < 0.05 &&
@@ -130,7 +130,7 @@ export const RiskMapView: React.FC<RiskMapViewProps> = ({
         const m = L.marker([pilot.latitude, pilot.longitude], { icon: pilotIcon }).addTo(layerGroup);
         m.bindPopup(`
           <div style="font-family: sans-serif; font-size: 12px;">
-            <strong style="color: #0284c7;">SIH Demonstration Pilot</strong><br/>
+            <strong style="color: #0284c7;">Regional Agro-Station</strong><br/>
             <b>${pilot.name}</b><br/>
             <button id="btn-pilot-${pilot.latitude}" style="margin-top: 6px; padding: 4px 8px; background: #0284c7; color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer;">
               Switch Location

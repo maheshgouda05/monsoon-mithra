@@ -133,9 +133,7 @@ export const App: React.FC = () => {
       .catch((err) => {
         if (!isMounted) return;
         console.warn('Geolocation permission not granted or unavailable:', err.message);
-        setGeoNotice(
-          'Location access is optional. Currently displaying the Karnataka SIH Demonstration Agro-Basin. Click "Use My Location" anytime to switch to your GPS.'
-        );
+        setGeoNotice(null);
         loadDataForLocation(PILOT_LOCATIONS[0]);
       });
 
@@ -153,7 +151,8 @@ export const App: React.FC = () => {
       setLocation(userLoc);
       await loadDataForLocation(userLoc);
     } catch (err: any) {
-      setGeoNotice(err.message || 'Unable to access device location.');
+      console.warn('Device location unavailable:', err?.message);
+      setGeoNotice('Location unavailable — choose a location to continue.');
       setIsLoading(false);
     }
   };
@@ -195,13 +194,16 @@ export const App: React.FC = () => {
         onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       />
 
-      {/* Geolocation Notice Banner (if fallback active) */}
+      {/* Location Notice (only displayed if explicit location lookup fails) */}
       {geoNotice && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs text-amber-800 flex items-center justify-between">
-          <span>{geoNotice}</span>
+        <div className="bg-slate-800 border-b border-slate-700 px-4 py-2 text-xs text-slate-200 flex items-center justify-between shadow-xs">
+          <div className="flex items-center space-x-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+            <span>{geoNotice}</span>
+          </div>
           <button
             onClick={() => setGeoNotice(null)}
-            className="text-amber-600 font-bold ml-2 hover:underline"
+            className="text-slate-400 hover:text-white px-2 py-0.5 rounded text-[11px] transition cursor-pointer"
           >
             Dismiss
           </button>
@@ -212,7 +214,10 @@ export const App: React.FC = () => {
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
         <Sidebar
           activeTab={activeTab}
-          onSelectTab={setActiveTab}
+          onSelectTab={(tab) => {
+            setActiveTab(tab);
+            setGeoNotice(null);
+          }}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           isMobileOpen={isMobileMenuOpen}

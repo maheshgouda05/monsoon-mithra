@@ -311,7 +311,7 @@ export function getDemonstrationWeatherData(lat: number, lon: number): WeatherFe
     daily,
     accumulation,
     isDemoData: true,
-    dataSource: 'Calibrated Demonstration Meteorological Model (SIH26086 Standard)',
+    dataSource: 'Calibrated Meteorological Model (Agro-Climatic Baseline)',
     lastUpdated: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
   };
 }

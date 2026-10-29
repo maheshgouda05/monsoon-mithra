@@ -168,10 +168,10 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           </div>
         )}
 
-        {/* Action 3: Karnataka Pilot Demonstrations */}
+        {/* Action 3: Preset Regional Agro-Basins */}
         <div className="mt-5 pt-4 border-t border-slate-100">
           <label className="text-xs font-semibold text-slate-700 block mb-2">
-            Demonstration Pilots (Karnataka Agro-Basins)
+            Preset Agricultural Basins (Karnataka)
           </label>
           <div className="grid grid-cols-2 gap-2 text-xs">
             {PILOT_LOCATIONS.map((pilot) => (

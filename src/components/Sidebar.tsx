@@ -165,18 +165,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
           })}
         </div>
 
-        {/* Sidebar Footer / Collapse Toggle */}
-        <div className="p-3 border-t border-slate-800 hidden lg:flex items-center justify-between">
-          {!isCollapsed && (
-            <div className="text-[11px] text-slate-500">
-              <p className="font-semibold text-slate-400">SIH 2026</p>
-              <p>Problem SIH26086</p>
-            </div>
-          )}
+        {/* Sidebar Collapse Toggle */}
+        <div
+          className={`p-2.5 border-t border-slate-800/80 hidden lg:flex items-center ${
+            isCollapsed ? 'justify-center' : 'justify-end'
+          }`}
+        >
           <button
             onClick={onToggleCollapse}
-            className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition mx-auto lg:mx-0"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
