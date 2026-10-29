@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Compass,
+  User,
+  ChevronDown,
+  Settings,
+  X,
   MapPin,
   RefreshCw,
   Search,
@@ -40,36 +43,119 @@ export const Navbar: React.FC<NavbarProps> = ({
   onChangeLanguage,
   onToggleMobileMenu,
 }) => {
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [profileModal, setProfileModal] = useState<'profile' | 'preferences' | null>(null);
+  const [userName, setUserName] = useState<string>(() => {
+    try {
+      return (
+        localStorage.getItem('user_name') ||
+        localStorage.getItem('userName') ||
+        ((window as unknown as { __USER__?: { name?: string } }).__USER__?.name) ||
+        ''
+      );
+    } catch {
+      return '';
+    }
+  });
+  const [tempName, setTempName] = useState('');
+
+  const displayName = userName.trim() || 'User Profile';
+
   return (
-    <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo & Platform Title */}
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={onToggleMobileMenu}
-              className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none"
-              aria-label="Toggle navigation menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <div className="flex items-center space-x-2.5">
-              <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center shadow-inner">
-                <Compass className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-bold text-lg tracking-wider text-emerald-400">HEXANOD</span>
-                  <span className="hidden sm:inline-block text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
-                    SIH26086
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-400 hidden sm:block">
-                  Earth Intelligence for Agriculture
-                </p>
+    <>
+      <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* User Profile Section (Replaced HEXANOD / SIH26086 branding) */}
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <button
+                onClick={onToggleMobileMenu}
+                className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none cursor-pointer"
+                aria-label="Toggle navigation menu"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+
+              <div className="relative">
+                <button
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center space-x-2 sm:space-x-2.5 px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-xl hover:bg-slate-800/90 active:bg-slate-800 border border-slate-800/80 hover:border-slate-700 transition cursor-pointer select-none group text-left"
+                  aria-label="User Profile Menu"
+                  aria-expanded={isProfileOpen}
+                >
+                  <div className="w-8 h-8 rounded-full bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-600/30 group-hover:border-emerald-400/60 transition shrink-0 shadow-xs">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <div className="flex flex-col text-left leading-tight">
+                    <span className="font-medium text-xs sm:text-sm text-slate-100 max-w-[105px] sm:max-w-[160px] truncate group-hover:text-emerald-300 transition">
+                      {displayName}
+                    </span>
+                    <span className="text-[10px] text-slate-400 hidden sm:block font-normal capitalize">
+                      {persona === 'farmer' ? 'Farmer Profile' : 'Analyst Profile'}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 group-hover:text-slate-200 transition-transform duration-200 ${
+                      isProfileOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown backdrop */}
+                {isProfileOpen && (
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsProfileOpen(false)}
+                  />
+                )}
+
+                {/* Dropdown Menu */}
+                {isProfileOpen && (
+                  <div className="absolute left-0 mt-2 w-56 rounded-xl bg-slate-900 border border-slate-700/80 shadow-2xl py-1 z-50 text-xs backdrop-blur-md animate-in fade-in duration-150">
+                    <div className="px-3.5 py-2.5 border-b border-slate-800 bg-slate-800/40">
+                      <p className="font-semibold text-slate-200 truncate">{displayName}</p>
+                      <p className="text-[10px] text-slate-400 truncate mt-0.5">
+                        {persona === 'farmer' ? 'Role: Farmer' : 'Role: Officer / Analyst'}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        setTempName(userName);
+                        setProfileModal('profile');
+                      }}
+                      className="w-full text-left px-3.5 py-2.5 hover:bg-slate-800/90 text-slate-200 flex items-center space-x-2.5 transition cursor-pointer"
+                    >
+                      <User className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="font-medium">My Profile</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        onOpenSearch();
+                      }}
+                      className="w-full text-left px-3.5 py-2.5 hover:bg-slate-800/90 text-slate-200 flex items-center space-x-2.5 transition cursor-pointer"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="font-medium">Location Settings</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        setProfileModal('preferences');
+                      }}
+                      className="w-full text-left px-3.5 py-2.5 hover:bg-slate-800/90 text-slate-200 flex items-center space-x-2.5 transition cursor-pointer"
+                    >
+                      <Settings className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="font-medium">Preferences</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
 
           {/* Location Bar & Quick Action */}
           <div className="flex items-center space-x-2 sm:space-x-3">
@@ -184,5 +270,171 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
     </header>
+
+      {/* My Profile Modal */}
+      {profileModal === 'profile' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
+          <div className="fixed inset-0" onClick={() => setProfileModal(null)} />
+          <div className="relative bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl z-10 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-full bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                  <User className="w-4 h-4" />
+                </div>
+                <h3 className="text-base font-semibold text-slate-100">User Profile</h3>
+              </div>
+              <button
+                onClick={() => setProfileModal(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-1.5">
+                <label className="text-slate-400 font-medium">Display Name</label>
+                <input
+                  type="text"
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
+                  placeholder="Enter your name or handle"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-emerald-500 text-xs"
+                />
+              </div>
+
+              <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-800 space-y-2">
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="text-slate-400">Active Persona</span>
+                  <span className="font-medium text-emerald-400 capitalize">
+                    {persona === 'farmer' ? 'Farmer Mode' : 'Officer / Analyst'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="text-slate-400">Monitored Location</span>
+                  <span className="font-medium text-slate-200 max-w-[180px] truncate">
+                    {location.name}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="text-slate-400">Coordinates</span>
+                  <span className="font-mono text-[11px] text-slate-300">
+                    {location.latitude.toFixed(3)}°N, {location.longitude.toFixed(3)}°E
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end space-x-2 pt-2">
+              <button
+                onClick={() => setProfileModal(null)}
+                className="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition cursor-pointer text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  const trimmed = tempName.trim();
+                  setUserName(trimmed);
+                  try {
+                    if (trimmed) {
+                      localStorage.setItem('user_name', trimmed);
+                    } else {
+                      localStorage.removeItem('user_name');
+                    }
+                  } catch {}
+                  setProfileModal(null);
+                }}
+                className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition cursor-pointer text-xs shadow-sm"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Preferences Modal */}
+      {profileModal === 'preferences' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
+          <div className="fixed inset-0" onClick={() => setProfileModal(null)} />
+          <div className="relative bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl z-10 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-full bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                  <Settings className="w-4 h-4" />
+                </div>
+                <h3 className="text-base font-semibold text-slate-100">Preferences</h3>
+              </div>
+              <button
+                onClick={() => setProfileModal(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="space-y-2">
+                <label className="text-slate-400 font-medium">Application Persona</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => onTogglePersona('farmer')}
+                    className={`p-2.5 rounded-xl border text-left transition flex items-center space-x-2 cursor-pointer ${
+                      persona === 'farmer'
+                        ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300'
+                        : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <UserCheck className="w-4 h-4 shrink-0" />
+                    <div>
+                      <p className="font-semibold">Farmer Mode</p>
+                      <p className="text-[10px] text-slate-400">Actionable field advisories</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => onTogglePersona('analyst')}
+                    className={`p-2.5 rounded-xl border text-left transition flex items-center space-x-2 cursor-pointer ${
+                      persona === 'analyst'
+                        ? 'bg-sky-950/60 border-sky-500 text-sky-300'
+                        : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <BarChart3 className="w-4 h-4 shrink-0" />
+                    <div>
+                      <p className="font-semibold">Officer / Analyst</p>
+                      <p className="text-[10px] text-slate-400">Technical met diagnostics</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-slate-400 font-medium">Language / ಭಾಷೆ</label>
+                <select
+                  value={language}
+                  onChange={(e) => onChangeLanguage(e.target.value as Language)}
+                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs cursor-pointer"
+                >
+                  <option value="en">English</option>
+                  <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                  <option value="hi">हिंदी (Hindi)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setProfileModal(null)}
+                className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition cursor-pointer text-xs shadow-sm"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
+
