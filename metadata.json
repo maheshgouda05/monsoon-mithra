@@ -1,6 +1,10 @@
 {
-  "name": "HEXANOD — Hyperlocal Monsoon Intelligence",
-  "description": "Hyperlocal Monsoon Intelligence, Weather Prediction & Agricultural Advisory Platform for SIH26086",
-  "requestFramePermissions": ["geolocation"],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "name": "Monsoon Mithra",
+  "description": "Hyperlocal monsoon intelligence, live weather tracking, rain start/stop window predictions, historical climatology, and crop-independent agricultural advisory.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
