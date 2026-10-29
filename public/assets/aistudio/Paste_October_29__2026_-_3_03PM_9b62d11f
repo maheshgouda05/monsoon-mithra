@@ -1,0 +1,673 @@
+# MASTER PROMPT: HEXANOD
+## Hyperlocal Monsoon Intelligence, Weather Prediction & Agricultural Advisory Platform
+
+Act as a senior full-stack engineer, meteorological data engineer, geospatial developer, machine-learning engineer, and UI/UX designer.
+
+Build a complete, functional, responsive web application named **HEXANOD** for Smart India Hackathon problem SIH26086.
+
+### Core mission
+
+HEXANOD combines current weather, hourly and daily forecasts, historical rainfall, satellite-derived observations where accessible, monsoon-onset analysis, dry-spell prediction, heavy-rain risk, and general agricultural weather advisories.
+
+The application must answer practical questions such as:
+
+- What is the weather at my current location right now?
+- What is the temperature, humidity, wind speed, wind direction, and chance of rain?
+- If it rains, approximately when will it start and stop?
+- How much rainfall is expected in the next few hours, today, and over the coming days?
+- Is the weather suitable for outdoor agricultural work?
+- Is there a risk of a prolonged dry spell or heavy rainfall?
+- When might the monsoon arrive or become established in this area?
+- How does the current season compare with historical rainfall patterns?
+- What general precautions should farmers consider based on the forecast?
+- How reliable is the prediction, and what evidence supports it?
+
+This is a **crop-independent platform**. Do not select, promote, or hardcode any particular crop. Do not include crop-specific growth stages, crop calendars, crop names, or crop-specific advisory rules.
+
+The product must prioritise real data, transparent methodology, useful decisions, and honest uncertainty over impressive-looking but fabricated predictions.
+
+---
+
+# 1. Create a completely new project
+
+Create a new project and folder named `HEXANOD`.
+
+Do not reuse the old application's interface, layout, or components. Start with a clean architecture and a new visual identity.
+
+Build a fully working application, not just a landing page, static dashboard, or Figma-like mockup.
+
+Use a clean project structure, reusable components, error handling, environment configuration, and a clear README.
+
+Recommended stack:
+
+- Frontend: React + TypeScript + Vite.
+- Styling: Tailwind CSS or a clean, consistent CSS system.
+- Backend: Python + FastAPI.
+- Data processing: Python, Pandas, NumPy, and suitable scientific libraries.
+- Interactive maps: Leaflet + OpenStreetMap.
+- Charts: Recharts or another suitable charting library.
+- Persistence: lightweight local database or file cache for the prototype.
+- API configuration: environment variables where required.
+
+If a different stack is better suited to the existing environment, explain why and maintain the same functionality.
+
+Ensure the frontend and backend can run locally with clear instructions.
+
+# 2. Visual theme and branding
+
+Create a premium scientific platform called:
+
+**HEXANOD — Earth Intelligence for Agriculture**
+
+The design should combine meteorological intelligence, satellite monitoring, geography, and practical agricultural decision support.
+
+### Colour system
+- Forest green for agriculture and favourable conditions.
+- Deep navy for scientific data and primary navigation.
+- Teal and blue for water, rainfall, and weather.
+- Warm off-white and light grey backgrounds.
+- Amber for caution.
+- Muted red for high risk.
+
+### Design direction
+- Modern geospatial intelligence platform.
+- Professional weather-monitoring interface.
+- Clear data visualisations and rainfall timelines.
+- Realistic map layers and weather symbols.
+- Clean typography and accessible contrast.
+- Responsive desktop, tablet, and mobile layouts.
+- Subtle transitions only when useful.
+
+Avoid generic admin templates, excessive gradients, giant decorative cards, unnecessary 3D effects, and irrelevant stock images.
+
+Use actual map and weather visualisations as the main visual elements.
+
+# 3. Default to the user's current location
+
+This is a critical feature.
+
+When the application first opens:
+
+1. Ask for browser location permission using the Geolocation API.
+2. If permission is granted, retrieve the user's latitude and longitude.
+3. Use those coordinates to retrieve current weather, hourly forecast, daily forecast, and relevant historical or satellite-derived information.
+4. Display the detected location name using reverse geocoding.
+5. Show the coordinates and the approximate geographic precision when appropriate.
+6. Make the current location the default selected location for the session.
+
+Provide a prominent **Use My Current Location** button.
+
+Also provide:
+- Search by city, village, district, address, or place.
+- Manual latitude/longitude selection.
+- Saved locations, if practical.
+- A way to switch back to the current location.
+
+If permission is denied, the location service fails, or the device does not support geolocation, show a location search screen and offer a clearly labelled demonstration location. Never silently pretend that the demonstration location is the user's actual location.
+
+Do not hardcode Bengaluru, Mandya, or any other place as the current location.
+
+The system should work for users across India, subject to data coverage.
+
+# 4. Main navigation
+
+Create these sections:
+
+1. Overview
+2. Live Weather
+3. Rain Forecast
+4. Monsoon Intelligence
+5. Historical Rainfall
+6. Satellite Intelligence
+7. Agricultural Advisory
+8. Risk Map
+9. Model Validation
+10. Data Sources & Methodology
+
+Use a collapsible sidebar on desktop and a compact mobile navigation menu.
+
+Farmer Mode should simplify the interface into clear weather information and practical precautions.
+
+Officer/Analyst Mode should provide more detailed charts, historical comparisons, spatial analysis, and validation metrics.
+
+Neither mode should require the user to select a crop.
+
+# 5. Main overview dashboard
+
+The overview should answer the most important questions immediately.
+
+At the top, show:
+- Detected location.
+- Current date and local time.
+- Current weather condition.
+- Last updated time.
+- Data source.
+- Location accuracy or location-source status.
+
+Display useful live weather metrics:
+- Temperature.
+- Feels-like temperature.
+- Relative humidity.
+- Chance of precipitation.
+- Expected rainfall amount.
+- Wind speed and direction.
+- Wind gusts where available.
+- Atmospheric pressure.
+- Cloud cover.
+- Visibility where available.
+- UV index where available.
+- Dew point where available.
+- Sunrise and sunset.
+
+Only display fields actually returned by the relevant data source. If a field is unavailable, label it unavailable instead of inventing a value.
+
+Provide a prominent summary:
+
+**What is happening now?**
+
+Examples of the type of summary to generate:
+- Rain is currently unlikely; monitor the afternoon forecast.
+- Rain is expected later today; check the estimated start and end window.
+- Strong winds or heavy rainfall may affect outdoor activities.
+
+These summaries must be generated from real retrieved data and clear rules, not random text.
+
+# 6. Detailed hourly weather forecast
+
+Build an hourly forecast covering at least the next 24 hours, with 48–72 hours available when the API supports it.
+
+For every hour, show:
+- Local time.
+- Temperature.
+- Feels-like temperature if available.
+- Probability of precipitation.
+- Expected precipitation amount.
+- Rain or snow type where relevant.
+- Wind speed.
+- Wind direction.
+- Wind gusts where available.
+- Relative humidity.
+- Cloud cover.
+- Weather condition.
+
+Use a horizontally scrollable timeline on mobile and a readable chart or table on desktop.
+
+Allow users to inspect an individual hour for more details.
+
+Clearly distinguish:
+- Probability that precipitation will occur.
+- Expected precipitation quantity.
+- Observed rainfall.
+- Forecast rainfall.
+
+These values are not interchangeable.
+
+# 7. Rain start and stop prediction
+
+This is one of the most important features.
+
+Create a dedicated **Rain Timeline** that estimates:
+
+- When rain may begin.
+- The most likely rainfall window.
+- When rain may weaken.
+- When rain may stop.
+- Whether another rainfall period is expected later.
+- Expected accumulated rainfall during each period.
+- Probability of precipitation during the period.
+- Potentially intense rainfall or gusty winds.
+
+Use the provider's hourly precipitation forecasts and weather conditions to identify likely rain periods.
+
+Implement a configurable rain-event detection algorithm using consecutive forecast hours, precipitation probability, expected precipitation, and available weather codes.
+
+Display results in language such as:
+- "Rain may begin around 3–5 PM."
+- "Rain is currently forecast to ease around 6–7 PM."
+- "Another possible shower appears later tonight."
+
+These are illustrative wording patterns, not fixed outputs.
+
+### Important limitations
+- Do not claim an exact minute when rain will start or stop.
+- Do not show a precise stop time if the forecast does not support one.
+- Use a time range and explain uncertainty.
+- Label the result as a forecast estimate, not a guarantee.
+- If rainfall is intermittent, show separate rain windows.
+- If no rain is forecast, say so without promising that it cannot rain.
+
+Show a confidence indicator only if it is calculated using a documented method. Otherwise use a qualitative uncertainty label based on forecast consistency and data availability.
+
+# 8. Rainfall amount and accumulation
+
+Create a detailed rainfall analysis section.
+
+Display:
+- Expected rainfall in the next hour where available.
+- Expected rainfall in the next 3, 6, 12, and 24 hours.
+- Expected daily rainfall.
+- Forecast rainfall over 3, 7, and 14 days.
+- Observed rainfall when a genuine observation source is available.
+- Historical average rainfall for the same period.
+- Current seasonal rainfall total where supported.
+- Difference from the historical average.
+- Wet-day and dry-day statistics.
+
+Use millimetres (mm) as the default rainfall unit.
+
+Allow a unit preference only if all displayed values are converted consistently.
+
+Create:
+- Hourly rainfall bar chart.
+- Daily rainfall chart.
+- Historical-versus-current rainfall comparison.
+- Cumulative rainfall chart.
+- Dry-spell timeline.
+
+Never describe forecast accumulation as measured rainfall.
+
+# 9. Other important weather intelligence
+
+Create dedicated, readable explanations for the following.
+
+### Humidity
+Show relative humidity and its hourly trend. Explain generally whether the air is becoming more humid or drier. Do not make unsupported disease or crop claims.
+
+### Wind
+Show wind speed, direction, and gusts. Use understandable units, with a configurable km/h or m/s display. Flag strong winds only using documented thresholds and identify those thresholds.
+
+### Temperature
+Show current temperature, feels-like temperature, daily minimum and maximum, and expected changes.
+
+### Clouds and sunshine
+Show cloud cover, available sunshine estimates, sunrise, sunset, and daylight duration.
+
+### Atmospheric pressure
+Show current pressure and its trend where available. Explain that pressure alone cannot reliably determine whether rain will occur.
+
+### Visibility and UV
+Display when supported by the selected provider. Do not invent missing values.
+
+### Weather comfort and outdoor conditions
+Provide a simple indication of whether conditions may be suitable for outdoor work based on documented weather thresholds. Clearly label this as a general weather indicator, not a guarantee of safety.
+
+# 10. Seven-day and fourteen-day outlook
+
+Create a daily forecast for the next 7 days, with a 14-day outlook when available.
+
+Show:
+- Minimum and maximum temperature.
+- Rain probability.
+- Expected rainfall.
+- Wind conditions.
+- Humidity.
+- Heavy-rain risk.
+- Consecutive dry-day outlook.
+- Key changes from the previous day.
+
+For days further into the forecast, communicate increased uncertainty.
+
+Do not give the same confidence level to every forecast day.
+
+If the weather provider supports multiple forecast models, optionally compare their rainfall estimates and show disagreement. Do not imply that independent models agree when only one model is being used.
+
+# 11. Monsoon onset and break intelligence
+
+Build a dedicated section to analyse monsoon conditions using historical rainfall and current forecast data.
+
+Include:
+- Historical monsoon progression.
+- Candidate onset status.
+- Estimated onset window.
+- Candidate onset probability, if properly estimated.
+- Current rainfall accumulation.
+- Recent wet and dry spells.
+- Risk of a prolonged dry spell.
+- Potential monsoon-break periods.
+- Expected rainfall anomaly.
+- Historical onset comparison.
+- Explanation of the evidence behind every result.
+
+### Transparent onset rule
+
+Implement a configurable experimental rainfall-based onset rule. For example, a candidate onset may be flagged after at least 20 mm of rainfall over a rolling 3-day period.
+
+Treat this only as an initial experimental rule. It is not an official IMD declaration.
+
+The methodology must distinguish:
+- A rainfall threshold being met.
+- A candidate onset being identified.
+- Persistence being confirmed using subsequent rainfall.
+- An official monsoon onset declared by an authorised meteorological source.
+
+Do not claim that future rainfall persistence is already confirmed when it has not yet occurred.
+
+### Break and dry-spell rules
+
+Use configurable definitions for:
+- Dry day.
+- Consecutive dry days.
+- Prolonged dry spell.
+- Candidate monsoon break.
+- Rainfall deficit relative to historical climatology.
+
+An initial dry-day threshold may be rainfall below 2.5 mm, with a prolonged dry spell threshold of more than 7 consecutive dry days. These are experimental starting points and must be configurable and locally validated.
+
+Do not call every dry week a confirmed meteorological monsoon break.
+
+# 12. Historical rainfall and climatology
+
+Integrate CHIRPS daily rainfall data for historical rainfall analysis, subject to data availability and access.
+
+Attempt to obtain at least 25 years of daily historical rainfall for the selected location or spatial unit.
+
+Calculate:
+- Long-term daily climatology.
+- Monthly rainfall averages.
+- Seasonal rainfall totals.
+- Year-to-year variability.
+- Wet-day frequency.
+- Longest dry spells.
+- Rainfall anomalies.
+- Historical onset patterns using the documented experimental definition.
+- Historical heavy-rainfall frequency.
+
+Display the actual years and dates available.
+
+Account for leap years, missing data, and incomplete seasons.
+
+Clearly explain the spatial resolution of the source and how grid data is mapped or aggregated to the selected location.
+
+Do not invent a 25-year record if the data retrieval fails. Show a clear error or labelled demonstration data.
+
+# 13. Probability prediction engine
+
+Develop an explainable statistical baseline that combines:
+- Historical rainfall climatology.
+- Current-season rainfall.
+- Recent wet/dry spell conditions.
+- Forecast rainfall.
+- Forecast precipitation probabilities.
+- Calendar and seasonal context.
+- Forecast consistency, if multiple model data is available.
+
+Estimate the probability of:
+- Candidate onset within 7 days.
+- Candidate onset within 14 days.
+- Prolonged dry spell within 7 days.
+- Prolonged dry spell within 14 days.
+- Heavy rainfall during the next 7 days.
+- Heavy rainfall during the next 14 days.
+
+Use the following labels carefully:
+- **Forecast probability:** probability supplied by a weather provider for a defined forecast event.
+- **Experimental model probability:** an estimated probability produced by the project's statistical model.
+- **Risk score:** a relative indicator that is not a calibrated probability.
+- **Unavailable:** insufficient data to calculate the requested estimate.
+
+Never present an arbitrary number as a scientific probability.
+
+Document model inputs, assumptions, event definitions, training data, and limitations.
+
+# 14. Heavy rainfall and weather-risk alerts
+
+Implement configurable rules for:
+- Heavy rainfall.
+- Very heavy rainfall where a suitable local threshold is defined.
+- Intense short-duration rainfall where hourly data supports it.
+- Prolonged dry spells.
+- Strong winds.
+- Forecast data gaps.
+- Potentially disruptive weather.
+
+Distinguish a locally configured experimental alert from an official weather warning.
+
+Where official IMD alerts are available and their integration is verified, display the source, issue time, valid period, and alert level.
+
+Do not invent official warnings or imply that HEXANOD replaces emergency services or official meteorological alerts.
+
+# 15. Crop-independent agricultural advisory
+
+This application must not use crop names or crop-stage logic.
+
+Build a general agricultural advisory engine based on:
+
+**Weather conditions + rainfall forecast + risk level + data confidence → general advisory**
+
+Examples:
+- Before expected rain: review field drainage and relevant local precautions.
+- During a prolonged dry spell: monitor local soil moisture and consult local agricultural guidance on suitable moisture-conservation practices.
+- During heavy-rain risk: review drainage, erosion precautions, field access, and other relevant preparations.
+- When rainfall timing is uncertain: monitor forecast updates before making weather-dependent field decisions.
+- During strong winds: take appropriate precautions for exposed equipment and other vulnerable outdoor operations.
+
+Each advisory must include:
+- Recommended action.
+- Weather evidence.
+- Risk level.
+- Confidence or uncertainty.
+- Expected time window.
+- When to check the forecast again.
+- Data source.
+- Limitations.
+
+These are general guidance examples, not universal agricultural instructions. Avoid unsupported pesticide, fertiliser, or crop-treatment recommendations.
+
+Support English and Kannada. Add Hindi if practical. Keep translations accurate and readable.
+
+# 16. Interactive risk map
+
+Use Leaflet and OpenStreetMap.
+
+Default the map to the user's actual geolocation when permission is granted.
+
+Features:
+- Current-location marker.
+- Location search.
+- Weather markers.
+- Rainfall forecast overlay when suitable data is available.
+- Heavy-rain risk layer.
+- Dry-spell risk layer.
+- Historical rainfall layer.
+- Available satellite-derived observations.
+- Time selection where data supports it.
+- Legend and layer controls.
+
+Allow users to click a location and inspect:
+- Current weather.
+- Hourly rain forecast.
+- Expected rain start/stop windows.
+- 7-day and 14-day outlook.
+- Historical rainfall summary.
+- Relevant risk alerts.
+- Data source and timestamp.
+
+For the Karnataka pilot demonstration, allow selection of Bengaluru Rural, Tumakuru, and Mandya as optional example areas. These must not replace the current-location default.
+
+Do not invent village boundaries, official administrative boundaries, rainfall observations, or risk values. If an appropriate spatial dataset is unavailable, show a clearly labelled coordinate/grid layer.
+
+# 17. Satellite intelligence
+
+Create a dedicated satellite section.
+
+Investigate and integrate suitable real data sources, such as:
+- NASA GPM IMERG precipitation estimates.
+- INSAT/MOSDAC satellite products.
+
+Before using a source, verify that the dataset is accessible, the required product is available, and its licensing and usage requirements are understood.
+
+Where available, display:
+- Product name.
+- Observation or retrieval time.
+- Spatial and temporal resolution.
+- Rainfall estimate or relevant imagery.
+- Geographic coverage.
+- Processing status.
+- Known limitations.
+
+Clearly distinguish satellite-derived estimates from ground-gauge observations and weather-model forecasts.
+
+Do not show a decorative satellite image as though it were a live observation. If a satellite API is not successfully integrated, label the section as unavailable or demonstration-only.
+
+# 18. Model validation and backtesting
+
+Create a dedicated validation page.
+
+Where suitable reference records are accessible, compare the experimental onset estimates against official IMD monsoon onset records for at least 10 seasons.
+
+Display:
+- Evaluation period.
+- Number of valid seasons.
+- Predicted versus reference onset dates.
+- Absolute onset-date error.
+- Mean absolute error.
+- False onset and missed onset cases.
+- Dry-spell detection performance.
+- Heavy-rain event performance where reference observations are available.
+
+For genuine probability predictions with corresponding observed outcomes, calculate the Brier score and display a reliability diagram.
+
+Use time-ordered evaluation and avoid future-data leakage.
+
+If reference data or sufficient valid predictions are unavailable, clearly show “Validation pending.” Never fabricate accuracy, Brier scores, backtest results, or reliability plots.
+
+Explain that real-world skill may be affected by rainfall-grid resolution, terrain, local variability, and gauge bias. Do not claim bias correction has been completed unless it has actually been performed.
+
+# 19. Data source and methodology transparency
+
+Create a page called Data Sources & Methodology.
+
+Document:
+- Current-weather provider.
+- Forecast API.
+- Historical rainfall dataset.
+- Satellite datasets, if integrated.
+- Official weather warnings, if integrated.
+- Reverse-geocoding provider.
+- Data retrieval timestamps.
+- Spatial and temporal resolution.
+- Units and event definitions.
+- API limitations.
+- Data gaps and fallback behaviour.
+- Model assumptions.
+- Advisory rules.
+- Validation status.
+
+Create `docs/API_VERIFICATION.md` and record whether each API was actually tested successfully.
+
+Keep API secrets in backend environment variables. Do not expose secret keys in frontend code.
+
+# 20. Rain notifications and alerts
+
+If practical, add:
+- In-app heavy-rain alerts.
+- A warning when a high-confidence rain window is approaching.
+- Dry-spell alerts.
+- Forecast-change notifications.
+- A way to configure alert thresholds.
+- Optional browser notifications after the user explicitly grants permission.
+
+Notifications must only use real retrieved forecasts or clearly labelled experimental model outputs.
+
+Do not claim a notification was delivered if it was only generated inside the application.
+
+# 21. User experience and performance
+
+The application must:
+- Work well on mobile and desktop.
+- Load useful weather information quickly.
+- Use loading states and readable error messages.
+- Cache appropriate API responses to reduce unnecessary requests.
+- Handle rate limits, network failures, and missing values.
+- Show the time and source of each important dataset.
+- Use consistent units.
+- Provide accessible colours and text.
+- Avoid misleading precision.
+- Allow a user to retry failed requests.
+- Avoid requesting location permission repeatedly without reason.
+
+Provide a clear last-updated timestamp and refresh controls.
+
+# 22. Demo mode and real-data separation
+
+The application must still open if an external API is unavailable.
+
+Create an explicit **Demo Mode** with realistic-looking but clearly labelled demonstration values.
+
+Never mix demonstration values with live data without labelling them.
+
+For every chart, map layer, forecast card, and prediction, retain enough metadata to indicate whether the information is:
+- Live forecast.
+- Observed data.
+- Historical data.
+- Experimental model output.
+- Demonstration data.
+
+The app must never present fake satellite observations, invented rainfall histories, or made-up prediction accuracy as real.
+
+# 23. Project structure and documentation
+
+Organise the code into separate modules for:
+- Geolocation and place search.
+- Weather retrieval.
+- Forecast processing.
+- Rain-event detection.
+- Rainfall climatology.
+- Onset and dry-spell rules.
+- Probability estimation.
+- Satellite data retrieval.
+- Map layers.
+- Advisory generation.
+- Model validation.
+- API health and caching.
+
+Create:
+- `README.md`
+- `docs/API_VERIFICATION.md`
+- `.env.example`
+- Backend dependency file.
+- Frontend dependency file.
+- Example configuration file.
+- Basic tests for rainfall calculations, rain-window detection, onset/break rules, and probability evaluation.
+
+Provide simple start commands for both frontend and backend.
+
+# 24. Development priority
+
+Build in this order:
+
+1. New project, branding, responsive layout, and navigation.
+2. Browser geolocation and manual location search.
+3. Real current weather and hourly forecast.
+4. Rainfall amount charts and estimated rain start/stop windows.
+5. Seven-day and fourteen-day forecast.
+6. Historical rainfall and climatology.
+7. Monsoon onset, dry-spell, and heavy-rain analysis.
+8. General agricultural advisory.
+9. Interactive map.
+10. Satellite integrations where genuinely accessible.
+11. Backtesting and probability validation where reference data is available.
+12. Alerts, translations, tests, and documentation.
+
+Do not spend all the time on a beautiful frontend while leaving the core weather features nonfunctional.
+
+# 25. Final acceptance criteria
+
+The finished application must allow a judge to:
+
+1. Open HEXANOD and use their current location as the default.
+2. View temperature, humidity, wind, cloud cover, and rain probability.
+3. Inspect hourly precipitation and see an estimated rain start/stop window where supported.
+4. View expected rainfall over several time windows and the next 7–14 days.
+5. Understand the historical rainfall pattern for the selected location.
+6. Inspect candidate monsoon onset, dry-spell risk, and heavy-rain risk.
+7. Read a general agricultural advisory and understand the evidence behind it.
+8. View a map with genuine available weather data.
+9. See the data source, last-updated time, and uncertainty.
+10. Inspect validation results when genuine evaluation data exists.
+11. Use the application on a phone without broken layouts.
+12. Continue exploring a clearly labelled demo when external services fail.
+
+Deliver the complete runnable application. Test the core workflows, fix errors, and document any feature that could not be completed.
+
+**Final principle:** HEXANOD should not merely tell users what the weather is. It should explain what may happen next, how uncertain that forecast is, and what practical decision the available evidence can support.
